@@ -30,6 +30,10 @@ class Getchu:
         date = soup.find('a', {'id': 'tooltip-day'})
         if date:
             item['date'] = date.string
+        else:
+            date = soup.find('td', text='発売日：')
+            date = date.find_next('td', {'align': 'top'})
+            item['date'] = date.string.split('\n')[1].strip(' ')
 
         brand = soup.find('a', {'class': 'glance'})
         if brand:
