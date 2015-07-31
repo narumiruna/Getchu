@@ -71,9 +71,7 @@ class Getchu:
     def pc_soft(self, max_pages):
         for page in range(1, max_pages + 1):
             for item in map(self.item, self.search(genre='pc_soft', sort='create_date', pageID=page)):
-                pass
-                # print(item)
-                # print(item['genre'])
+                print(item)
 
     def goods(self, max_pages):
         for page in range(1, max_pages + 1):
@@ -90,7 +88,5 @@ class Getchu:
 if __name__ == '__main__':
     g = Getchu()
     g.pc_soft(1)
-    # g.goods(1)
-    # g.anime_dvd(1)
-
-    # print(g.item('http://www.getchu.com/soft.phtml?id=863432'))
+    g.goods(1)
+    g.anime_dvd(1)
