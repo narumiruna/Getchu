@@ -49,29 +49,25 @@ class Getchu:
 
         return item
 
-
-class Test:
-    def __init__(self):
-        self.g = Getchu()
-
     def pc_soft(self, max_pages):
         for page in range(1, max_pages + 1):
-            for item in map(self.g.item, self.g.search(genre='pc_soft', sort='create_date', pageID=page)):
+            for item in map(self.item, self.search(genre='pc_soft', sort='create_date', pageID=page)):
                 print(item)
 
     def goods(self, max_pages):
         for page in range(1, max_pages + 1):
-            for item in map(self.g.item, self.g.search(genre='goods', sort='create_date', pageID=page)):
+            for item in map(self.item, self.search(genre='goods', sort='create_date', pageID=page)):
                 print(item)
 
     def anime_dvd(self, max_pages):
         for page in range(1, max_pages + 1):
-            for item in map(self.g.item,
-                            self.g.search(genre='anime_dvd', age='18:lady', sort='create_date', pageID=page)):
+            for item in map(self.item,
+                            self.search(genre='anime_dvd', age='18:lady', sort='create_date', pageID=page)):
                 print(item)
 
 
 if __name__ == '__main__':
-    Test().pc_soft(1)
-    Test().goods(1)
-    Test().anime_dvd(1)
+    g = Getchu()
+    g.pc_soft(1)
+    g.goods(1)
+    g.anime_dvd(1)
