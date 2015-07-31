@@ -28,11 +28,7 @@ class Getchu:
 
         genre = soup.find('li', {'class': 'genretab current'})
         genre = genre.find('a')
-        item['genre'] = genre.string
-
-        date = soup.find('td', text='発売日：')
-        date = date.find_next('td', {'align': 'top'})
-        item['date'] = date.text.split('\n')[1].strip()
+        item.setdefault('genre', []).append(genre.string)
 
         brand = soup.find('td', text='ブランド：')
         brand = brand.find_next('td', {'align': 'top'})
@@ -40,8 +36,31 @@ class Getchu:
 
         price = soup.find('td', text='定価：')
         price = price.find_next('td', {'align': 'top'})
-        price = price.string
-        item.setdefault('price', price.string)
+        item['price'] = price.string
+
+        date = soup.find('td', text='発売日：')
+        date = date.find_next('td', {'align': 'top'})
+        item['date'] = date.text.split('\n')[1].strip()
+
+        media = soup.find('td', text='メディア：')
+        if media:
+            item['media'] = media.find_next('td', {'align': 'top'}).string
+
+        genre = soup.find('td', text='ジャンル：')
+        if genre:
+            item['genre'].append(genre.find_next('td', {'align': 'top'}).string)
+
+        painting = soup.find('td', text='原画：')
+        if painting:
+            item['painting'] = painting.find_next('td', {'align': 'top'}).text.split('、')
+
+        scenario = soup.find('td', text='シナリオ：')
+        if scenario:
+            item['scenario'] = scenario.find_next('td', {'align': 'top'}).text.split('、')
+
+        category = soup.find('td', text='カテゴリ：')
+        if category:
+            item['category'] = category.find_next('td', {'align': 'top'}).text.strip('[一覧]').strip().split('、')
 
         image = soup.find('img', {'width': '280', 'height': '400'})
         if image:
@@ -52,7 +71,9 @@ class Getchu:
     def pc_soft(self, max_pages):
         for page in range(1, max_pages + 1):
             for item in map(self.item, self.search(genre='pc_soft', sort='create_date', pageID=page)):
-                print(item)
+                pass
+                # print(item)
+                # print(item['genre'])
 
     def goods(self, max_pages):
         for page in range(1, max_pages + 1):
@@ -69,5 +90,7 @@ class Getchu:
 if __name__ == '__main__':
     g = Getchu()
     g.pc_soft(1)
-    g.goods(1)
-    g.anime_dvd(1)
+    # g.goods(1)
+    # g.anime_dvd(1)
+
+    # print(g.item('http://www.getchu.com/soft.phtml?id=863432'))
