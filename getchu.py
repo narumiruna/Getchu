@@ -39,8 +39,9 @@ class Getchu:
         item['price'] = price.string
 
         date = soup.find('td', text='発売日：')
-        date = date.find_next('td', {'align': 'top'})
-        item['date'] = date.text.split('\n')[1].strip()
+        if date:
+            date = date.find_next('td', {'align': 'top'})
+            item['date'] = date.text.split('\n')[1].strip()
 
         media = soup.find('td', text='メディア：')
         if media:
