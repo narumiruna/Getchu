@@ -79,15 +79,8 @@ class Getchu:
             for item in map(self.item, self.search(genre='goods', sort='create_date', pageID=page)):
                 print(item)
 
-    def anime_dvd(self, max_pages):
-        for page in range(1, max_pages + 1):
-            for item in map(self.item,
-                            self.search(genre='anime_dvd', age='18:lady', sort='create_date', pageID=page)):
-                print(item)
-
 
 if __name__ == '__main__':
     g = Getchu()
     g.pc_soft(1)
     g.goods(1)
-    g.anime_dvd(1)
