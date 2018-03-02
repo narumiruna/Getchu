@@ -1,25 +1,26 @@
+import argparse
+
 import requests
 from bs4 import BeautifulSoup
 
-URL = 'http://www.getchu.com'
-
 
 class Getchu:
+    getchu_url = 'http://www.getchu.com'
+
     def __init__(self):
         self.session = requests.session()
-        self.session.get(URL + '/top.html', params={'gc': 'gc'})
+        self.session.get(self.getchu_url + '/top.html', params={'gc': 'gc'})
 
     def search(self, **kwargs):
         links = []
-        r = self.session.get(
-            URL + '/php/search.phtml', params=kwargs)
+        r = self.session.get(self.getchu_url + '/php/search.phtml', params=kwargs)
         soup = BeautifulSoup(r.text, 'html.parser')
         for link in soup.find_all('a', {'class': 'blueb'}):
-            href = URL + link.get('href').strip('.')
+            href = self.getchu_url + link.get('href').strip('.')
             links.append(href)
         return links
 
-    def item(self, url):
+    def parse_item(self, url):
         item = {'url': url}
         soup = BeautifulSoup(self.session.get(url).text, 'html.parser')
 
@@ -65,22 +66,26 @@ class Getchu:
 
         image = soup.find('img', {'width': '280', 'height': '400'})
         if image:
-            item['image'] = URL + image.get('src').strip('.')
+            item['image'] = self.getchu_url + image.get('src').strip('.')
 
         return item
 
-    def pc_soft(self, max_pages):
+    def crawl(self, genre, max_pages=10):
+        items = []
         for page in range(1, max_pages + 1):
-            for item in map(self.item, self.search(genre='pc_soft', sort='create_date', pageID=page)):
-                print(item)
-
-    def goods(self, max_pages):
-        for page in range(1, max_pages + 1):
-            for item in map(self.item, self.search(genre='goods', sort='create_date', pageID=page)):
-                print(item)
+            links = self.search(genre='pc_soft', sort='create_date', pageID=page)
+            for link in links:
+                item = self.parse_item(link)
+                items.append(item)
+        return items
 
 
 if __name__ == '__main__':
+    parser = argparse.ArgumentParser()
+    parser.add_argument('--genre', type=str, default='pc_soft')
+    parser.add_argument('--max-pages', type=int, default=1)
+    args = parser.parse_args()
+    print(args)
+
     g = Getchu()
-    g.pc_soft(1)
-    g.goods(1)
+    print(g.crawl(args.genre, args.max_pages))
