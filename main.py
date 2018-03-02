@@ -73,7 +73,7 @@ class Getchu:
     def crawl(self, genre, max_pages=10):
         items = []
         for page in range(1, max_pages + 1):
-            links = self.search(genre='pc_soft', sort='create_date', pageID=page)
+            links = self.search(genre=genre, sort='create_date', pageID=page)
             for link in links:
                 item = self.parse_item(link)
                 items.append(item)
